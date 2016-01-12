@@ -38,7 +38,7 @@ group :development, :test do
   gem 'capistrano-bundler', require: false
   gem 'capistrano-rvm'
   gem 'web-console', '~> 2.0'
-  gem 'sqlite3'
+  
 end
 group :production do
   gem 'pg'
