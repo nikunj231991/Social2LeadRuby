@@ -1,0 +1,5 @@
+# app/assets/javascripts/application/global.js.erb
+<%= Global.generate_js(namespace: "AppSettings", except: %w(admin credentials)) %>
+
+# app/assets/javascripts/application.js.coffee
+#= require application/global

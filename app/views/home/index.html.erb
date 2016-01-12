@@ -1,0 +1,24 @@
+<div id="fbconnect" class="row">
+    <div class="col-md-12 loginDiv">
+        <a href="javascript:void(0);" id="loginfbconnect"><img src="/assets/fbconnect.png" alt="Login with Facebook" class="btnpadding"></a>
+    </div>
+
+</div>
+<script type="text/javascript">
+   $(document).ready(function () {
+        var authDataModel = localStorage.getItem('authorizationData');
+        if (authDataModel) {
+            var webUrl = $('#WebUrl').val();
+            var homeUrl = webUrl + "home/AccountSetup";
+            window.location = homeUrl;      
+        }
+        $("#loginfbconnect").click(function () {
+            var homeUrl = $('#WebUrl').val() + "home/AccountSetup";
+            var serviceUrl = $('#ServiceUrl').val();
+            var externalProviderUrl = serviceUrl + "api/Account/ExternalLogin?SalesForceUserId=0&provider=Facebook&response_type=token&client_id=Social2Lead&redirect_uri=" + homeUrl;
+            window.location = externalProviderUrl;
+        });
+        $('#list-submenu').addClass('not-active');
+        $('.socialContent').show();
+    });
+</script>

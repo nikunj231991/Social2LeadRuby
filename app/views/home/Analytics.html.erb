@@ -1,0 +1,571 @@
+<h4 class="underlineText">Analytics</h4>
+<p>
+    <div id="analytics-list">
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="socialsorce-list" class="col-lg-4">
+                    <select id="drpSocialSourceList" class="input-control"></select>
+                </div>
+                <div class="col-lg-7">
+                    <div class="input-group" id="divAnalytics">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        <input id="txtAnalyticsDateRangePicker" class="form-control" readonly>
+                    </div>
+                    <div id="analyticsDateRangePickerContainer"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="chkMargin">
+                    <input type="checkbox" name="Action" value="Like" id="chkLike" checked>&nbsp;Like
+                    <input type="checkbox" name="Action" value="Share" id="chkShare" checked>&nbsp;Share
+                    <input type="checkbox" name="Action" value="Comment" id="chkComment" checked>&nbsp;Comment
+                    <input type="button" id="btnShowAnalytics" name="Show Analytics" value="Show Analytics" class="btnexportgrid" />
+                </div>
+            </div>
+        </div>
+    </div>   
+    <div id="showTables" class="row">
+        <div>
+            <div class="col-lg-6">
+                <div class="graphOuter">
+                    <div id="topPostsChart"></div>
+                    <div class="overlay">No data available</div>                   
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="graphOuter">
+                    <div id="topLeadsChart"></div>
+                    <div class="overlay">No data available</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="col-lg-6">
+                <div class="graphOuter">
+                    <div id="newUsersChart"></div>
+                    <div class="overlay">No data available</div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="graphOuter">
+                    <div id="returningUsersChart"></div>
+                    <div class="overlay">No data available</div>
+                </div>
+            </div>
+        </div>        
+        <div class="col-lg-12">
+            <div class="col-lg-4 graphdata">
+                <div class="graphdataInner"></div>
+                <div class="graphdataInner">Number of User</div>
+                <div class="graphdataInner">Number of New User</div>
+                <div class="graphdataInner">Number of Returning Users</div>
+            </div>
+            <div class="col-lg-2 graphdata">
+                <div class="graphdataInner">
+                   
+                <select id="drpSocialSourceCol1" class="input-control analyticsDropDown"></select>
+            </div>
+            <div class="graphdataInner"><label class="noOfUser"></label></div>
+            <div class="graphdataInner"><label class="noOfNewUser"></label></div>
+            <div class="graphdataInner"><label class="noOfReturningUser"></label></div>
+        </div>
+        <div class="col-lg-2 graphdata">
+            <div class="graphdataInner"><select id="drpSocialSourceCol2" class="input-control analyticsDropDown"></select></div>
+            <div class="graphdataInner"><label class="noOfUser"></label></div>
+            <div class="graphdataInner"><label class="noOfNewUser"></label></div>
+            <div class="graphdataInner"><label class="noOfReturningUser"></label></div>
+        </div>
+        <div class="col-lg-2 graphdata">
+            <div class="graphdataInner"><select id="drpSocialSourceCol3" class="input-control analyticsDropDown"></select></div>
+            <div class="graphdataInner"><label class="noOfUser"></label></div>
+            <div class="graphdataInner"><label class="noOfNewUser"></label></div>
+            <div class="graphdataInner"><label class="noOfReturningUser"></label></div>
+        </div>
+        <div class="col-lg-2 graphdata">
+            <div class="graphdataInner"><select id="drpSocialSourceCol4" class="input-control analyticsDropDown"></select></div>
+            <div class="graphdataInner"><label class="noOfUser"></label></div>
+            <div class="graphdataInner"><label class="noOfNewUser"></label></div>
+            <div class="graphdataInner"><label class="noOfReturningUser"></label></div>
+        </div>
+    </div>
+</div>
+</p>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#menu a').removeClass('active');
+        $('.analytics').addClass('active');
+        function checkUserSessionExpired() {
+            var authData = localStorage.getItem('authorizationData');
+            var webUrl = $('#WebUrl').val();
+            if (authData) {
+                var user = JSON.parse(localStorage.getItem('authorizationData'));
+                var expiryTimeSpan = new Date().getTime() / 1000;
+                if (expiryTimeSpan > user.timestamp) {
+                    localStorage.removeItem("authorizationData");
+                    var homeUrl = webUrl + "home/index?login";
+                    window.location = homeUrl;
+                }
+            } else {
+                localStorage.removeItem("authorizationData");
+                var homeUrl = webUrl + "home/index?login";
+                window.location = homeUrl;
+            }
+        }
+        checkUserSessionExpired();
+        var authDataModel = localStorage.getItem('authorizationData');        
+        if (authDataModel) {
+            var serviceUrl = $('#ServiceUrl').val();
+            var authData = JSON.parse(authDataModel);
+            var headers = {};
+            headers.Authorization = 'Bearer ' + authData.data.bearer_token;
+            $('#txtAnalyticsDateRangePicker').dateRangePicker({
+                container: '#analyticsDateRangePickerContainer',
+                defaultDateRange: 'LAST_30_DAYS'
+            });
+            function bindSocialLeadAnalyticsPages() {
+                checkUserSessionExpired();
+                $("#showTables").hide();
+                App.ProgressIndicator.Show();
+                $.ajax({
+                    url: serviceUrl + "api/FacebookAccount/RetrievePagesForAnalytics",
+                    type: "Get",
+                    headers: headers,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        App.ProgressIndicator.Hide();
+                        $("#drpSocialSourceList").append("<option  value=''>Select Social Source</option>");
+                        $("#drpSocialSourceCol1").append("<option  value=''>Select Social Source</option>");
+                        $("#drpSocialSourceCol2").append("<option  value=''>Select Social Source</option>");
+                        $("#drpSocialSourceCol3").append("<option  value=''>Select Social Source</option>");
+                        $("#drpSocialSourceCol4").append("<option  value=''>Select Social Source</option>");
+                        $.each(data, function (index, optionData) {
+                            $("#drpSocialSourceList").append("<option value='" + optionData.Id + "'>" + optionData.Link + "</option>");
+                            $("#drpSocialSourceCol1").append("<option value='" + optionData.Id + "'>" + optionData.LinkShortUrl + "</option>");
+                            $("#drpSocialSourceCol2").append("<option value='" + optionData.Id + "'>" + optionData.LinkShortUrl + "</option>");
+                            $("#drpSocialSourceCol3").append("<option value='" + optionData.Id + "'>" + optionData.LinkShortUrl + "</option>");
+                            $("#drpSocialSourceCol4").append("<option value='" + optionData.Id + "'>" + optionData.LinkShortUrl + "</option>");
+                        });
+                    }
+                });
+            }
+
+            bindSocialLeadAnalyticsPages();
+
+            function createChartTopPosts(selectedvalues, series, maxDate, minDate, like, share, comment) {
+                $('#topPostsChart').parent().find(".overlay").text("Please wait");
+                $('#topPostsChart').parent().find(".overlay").show();
+                var topPostData;
+
+                var dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: serviceUrl + "api/FacebookAccount/RetrieveTopPosts?pageId=" + selectedvalues + "&maxDate=" + maxDate + "&minDate=" + minDate + "&chkLike=" + like + "&chkShare=" + share + "&chkComment=" + comment,
+                            headers: headers,
+                            dataType: "json"
+                        }
+                    },
+                    change: function (e) {
+                        topPostData = e.items;
+                        setTimeout(function () {
+                            $("#topPostsChart text").each(function (index) {
+                                if ($(this).text().indexOf("...") > -1) {
+                                    $(this).append("<input type='hidden' class='openBrowser'  value='" + topPostData[index].PostLink + "'>");
+                                    $(this).click(function () {
+                                        window.open($(this).find('.openBrowser').val(), '_blank');
+                                    });
+                                }
+                            });
+                        }, 200);
+                    }
+                });
+
+                $("#topPostsChart").kendoChart({
+                    title: {
+                        text: "Top Posts",
+                        font: "bold 16px Arial,Helvetica,sans-serif",
+                        color: "#000000"
+                    },
+                    chartArea: {
+                        background: ""
+                    },
+                    legend: {
+                        position: "bottom",
+                        visible: false
+                    },
+                    seriesDefaults: {
+                        type: "bar",
+                        labels: {
+                            visible: true,
+                            background: "transparent"
+                        }
+                    },
+                    autoBind: false,
+                    dataSource: dataSource,
+                    series: series,
+                    valueAxis: {
+                        line: {
+                            visible: false
+                        },
+                        minorGridLines: {
+                            visible: false
+                        },
+                        majorGridLines: {
+                            visible: false
+                        },
+                        visible: false
+                    },
+                    categoryAxis: {
+                        field: "PostLinkShortUrl",
+                        labels: {
+                            template: '#= value #'
+                        },
+                        ajorGridLines: {
+                            visible: false
+                        },
+                        line: {
+                            visible: false
+                        },
+                        majorGridLines: {
+                            visible: false
+                        }
+                    },
+                    dataBound: function (e) {
+                        var topPostView = e.sender.dataSource.view();
+                        if (topPostView.length > 0) {
+                            $('#topPostsChart').parent().find(".overlay").hide();
+                        } else {
+                            $('#topPostsChart').parent().find(".overlay").text("No data available");
+                            $('#topPostsChart').parent().find(".overlay").show();
+                        }
+                    },
+                    tooltip: {
+                        visible: true,
+                        template: "#=dataItem.PostLink#"
+                    }
+                });
+                dataSource.read();
+            }
+
+            function createChartTopLeads(selectedvalues, series, maxDate, minDate, like, share, comment) {
+                $('#topLeadsChart').parent().find(".overlay").text("Please wait");
+                $('#topLeadsChart').parent().find(".overlay").show();
+                var dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: serviceUrl + "api/FacebookAccount/RetrieveTopLeads?pageId=" + selectedvalues + "&maxDate=" + maxDate + "&minDate=" + minDate + "&chkLike=" + like + "&chkShare=" + share + "&chkComment=" + comment,
+                            headers: headers,
+                            dataType: "json"
+                        }
+                    }
+                });
+                $("#topLeadsChart").kendoChart({
+                    title: {
+                        text: "Top Leads",
+                        font: "bold 16px Arial,Helvetica,sans-serif",
+                        color: "#000000"
+                    },
+                    legend: {
+                        position: "bottom",
+                        visible: false
+                    },
+                    seriesDefaults: {
+                        type: "bar",
+                        labels: {
+                            visible: true,
+                            background: "transparent"
+                        }
+                    },
+                    autoBind: false,
+                    dataSource: dataSource,
+                    series: series,
+                    valueAxis: {
+                        line: {
+                            visible: false
+                        },
+                        majorGridLines: {
+                            visible: false
+                        },
+                        visible: false
+                    },
+                    categoryAxis: {
+                        field: "UserName",
+                        labels: {
+                            template: '#= value #'
+                        },
+                        line: {
+                            visible: false
+                        },
+                        majorGridLines: {
+                            visible: false
+                        }
+                    },
+                    dataBound: function (e) {
+                        var topLeadsView = e.sender.dataSource.view();
+                        if (topLeadsView.length > 0) {
+                            $('#topLeadsChart').parent().find(".overlay").hide();
+                        } else {
+                            $('#topLeadsChart').parent().find(".overlay").text("No data available");
+                            $('#topLeadsChart').parent().find(".overlay").show();
+                        }
+                    },
+                    tooltip: {
+                        visible: true,
+                        template: "#=dataItem.ToolTip#"
+                    }
+                });
+                dataSource.read();
+            }
+
+            function createChartRetrieveNewUserAction(selectedvalues, series, maxDate, minDate, like, share, comment) {
+                $('#newUsersChart').parent().find(".overlay").text("Please wait");
+                $('#newUsersChart').parent().find(".overlay").show();
+                var newUserPostData;
+                var dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: serviceUrl + "api/FacebookAccount/RetrieveNewUser?pageId=" + selectedvalues + "&maxDate=" + maxDate + "&minDate=" + minDate + "&chkLike=" + like + "&chkShare=" + share + "&chkComment=" + comment,
+                            headers: headers,
+                            dataType: "json"
+                        }
+                    },
+                    change: function (e) {
+                        newUserPostData = e.items;
+                        setTimeout(function () {
+                            $("#newUsersChart text").each(function (index) {
+                                if ($(this).text().indexOf("...") > -1) {
+                                    $(this).append("<input type='hidden' class='openBrowser'  value='" + newUserPostData[index].PostLink + "'>");
+                                    $(this).click(function () {
+                                        window.open($(this).find('.openBrowser').val(), '_blank');
+                                    });
+                                }
+                            });
+                        }, 200);
+                    }
+                });
+                $("#newUsersChart").kendoChart({
+                    title: {
+                        text: "New Users",
+                        font: "bold 16px Arial,Helvetica,sans-serif",
+                        color: "#000000"
+                    },
+                    legend: {
+                        position: "bottom",
+                        visible: false
+                    },
+                    seriesDefaults: {
+                        type: "bar",
+                        labels: {
+                            visible: true,
+                            background: "transparent"
+                        }
+                    },
+                    autoBind: false,
+                    dataSource: dataSource,
+                    series: series,
+                    valueAxis: {
+                        line: {
+                            visible: false
+                        },
+                        majorGridLines: {
+                            visible: false
+                        },
+                        visible: false
+                    },
+                    categoryAxis: {
+                        field: "PostLinkShortUrl",
+                        labels: {
+                            template: '#= value #',
+                        },
+                        line: {
+                            visible: false
+                        },
+                        majorGridLines: {
+                            visible: false
+                        }
+                    },
+                    dataBound: function (e) {
+                        var newUserView = e.sender.dataSource.view();
+                        if (newUserView.length > 0) {
+                            $('#newUsersChart').parent().find(".overlay").hide();
+                        } else {
+                            $('#newUsersChart').parent().find(".overlay").text("No data available");
+                            $('#newUsersChart').parent().find(".overlay").show();
+                        }
+                    },
+                    tooltip: {
+                        visible: true,
+                        template: "#=dataItem.PostLink#"
+                    }
+                });
+                dataSource.read();
+            }
+
+            function createChartRetrivePostOldUser(selectedvalues, series, maxDate, minDate, like, share, comment) {
+                $('#returningUsersChart').parent().find(".overlay").text("Please wait");
+                $('#returningUsersChart').parent().find(".overlay").show();
+                var oldUserPostData;
+                var dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: serviceUrl + "api/FacebookAccount/RetrieveOldUser?pageId=" + selectedvalues + "&maxDate=" + maxDate + "&minDate=" + minDate + "&chkLike=" + like + "&chkShare=" + share + "&chkComment=" + comment,
+                            headers: headers,
+                            dataType: "json"
+                        }
+                    },
+                    change: function (e) {
+                        oldUserPostData = e.items;
+                        setTimeout(function () {
+                            $("#returningUsersChart text").each(function (index) {
+                                if ($(this).text().indexOf("...") > -1) {
+                                    $(this).append("<input type='hidden' class='openBrowser'  value='" + oldUserPostData[index].PostLink + "'>");
+                                    $(this).click(function () {
+                                        window.open($(this).find('.openBrowser').val(), '_blank');
+                                    });
+                                }
+                            });
+                        }, 200);
+                    }
+                });
+                $("#returningUsersChart").kendoChart({
+                    title: {
+                        text: "Returning Users",
+                        font: "bold 16px Arial,Helvetica,sans-serif",
+                        color: "#000000"
+                    },
+                    legend: {
+                        position: "bottom",
+                        visible: false
+                    },
+                    seriesDefaults: {
+                        type: "bar",
+                        labels: {
+                            visible: true,
+                            background: "transparent"
+                        }
+                    },
+                    autoBind: false,
+                    dataSource: dataSource,
+                    series: series,
+                    valueAxis: {
+                        line: {
+                            visible: false
+                        },
+                        majorGridLines: {
+                            visible: false
+                        },
+                        visible: false
+                    },
+                    categoryAxis: {
+                        field: "PostLinkShortUrl",
+                        template: "#= value #",
+                        line: {
+                            visible: false
+                        },
+                        majorGridLines: {
+                            visible: false
+                        }
+                    },
+                    dataBound: function (e) {
+                        var returningUserView = e.sender.dataSource.view();
+                        if (returningUserView.length > 0) {
+                            $('#returningUsersChart').parent().find(".overlay").hide();
+                        } else {
+                            $('#returningUsersChart').parent().find(".overlay").text("No data available");
+                            $('#returningUsersChart').parent().find(".overlay").show();
+                        }
+                    },
+                    tooltip: {
+                        visible: true,
+                        template: "#=dataItem.PostLink#"
+                    }
+                });
+
+                dataSource.read();
+            }
+
+            $("#drpSocialSourceCol1,#drpSocialSourceCol2,#drpSocialSourceCol3,#drpSocialSourceCol4").change(function (e) {
+                checkUserSessionExpired();
+                var socialSourceCol1Value = $(e.target).find('option:selected').val();
+                if (typeof socialSourceCol1Value == 'undefined' || socialSourceCol1Value == '') {
+                    socialSourceCol1Value = 0;
+                }
+                debugger;
+                var like = $('#chkLike').is(':checked');
+                var share = $('#chkShare').is(':checked');
+                var comment = $('#chkComment').is(':checked');
+                var dates = document.getElementById("txtAnalyticsDateRangePicker").value;
+                var startDate = dates.substr(0, dates.lastIndexOf("-"));
+                var endDate = dates.substr(13, dates.lastIndexOf(" "));
+                var minDate = new Date(startDate);
+                var maxDate = new Date(endDate);
+                var endMonth = maxDate.getMonth() + 1;
+                var startMonth = minDate.getMonth() + 1;
+                maxDate = endMonth + "/" + maxDate.getDate() + "/" + maxDate.getFullYear();
+                minDate = startMonth + "/" + minDate.getDate() + "/" + minDate.getFullYear();
+
+                $.ajax({
+                    type: "Get",
+                    headers: headers,
+                    url: serviceUrl + "api/FacebookAccount/RetrieveNumberOfPosts?pageId=" + socialSourceCol1Value+"&maxDate="+maxDate +"&minDate="+minDate +"&chkLike=" + like + "&chkShare=" + share + "&chkComment=" + comment,
+                    success: function (dataString) {
+                        $(e.target).parent().parent().find('.noOfUser').text(dataString);
+                    }
+                });
+                $.ajax({
+                    type: "Get",
+                    headers: headers,
+                    url: serviceUrl + "api/FacebookAccount/RetrieveNumberOfNewUser?pageId=" + socialSourceCol1Value + "&maxDate=" + maxDate + "&minDate=" + minDate + "&chkLike=" + like + "&chkShare=" + share + "&chkComment=" + comment,
+                    success: function (dataString) {
+                        $(e.target).parent().parent().find('.noOfNewUser').text(dataString);
+                    }
+                });
+                $.ajax({
+                    type: "Get",
+                    headers: headers,
+                    url: serviceUrl + "api/FacebookAccount/RetrieveNumberOfReturningUsers?pageId=" + socialSourceCol1Value + "&maxDate=" + maxDate + "&minDate=" + minDate + "&chkLike=" + like + "&chkShare=" + share + "&chkComment=" + comment,
+                    success: function (dataString) {
+                        $(e.target).parent().parent().find('.noOfReturningUser').text(dataString);
+                    }
+                });
+            });
+
+            $("#btnShowAnalytics").click(function () {
+                checkUserSessionExpired();
+                var selectedvalues = $('#drpSocialSourceList').find('option:selected').val();
+                if (typeof selectedvalues == 'undefined' || selectedvalues == '') {
+                    selectedvalues = 0;
+                }
+                var like = $('#chkLike').is(':checked');
+                var share = $('#chkShare').is(':checked');
+                var comment = $('#chkComment').is(':checked');
+                var dates = document.getElementById("txtAnalyticsDateRangePicker").value;
+                var startDate = dates.substr(0, dates.lastIndexOf("-"));
+                var endDate = dates.substr(13, dates.lastIndexOf(" "));
+                var minDate = new Date(startDate);
+                var maxDate = new Date(endDate);
+                var endMonth = maxDate.getMonth() + 1;
+                var startMonth = minDate.getMonth() + 1;
+                maxDate = endMonth + "/" + maxDate.getDate() + "/" + maxDate.getFullYear();
+                minDate = startMonth + "/" + minDate.getDate() + "/" + minDate.getFullYear();
+
+                var series =
+                [{
+                    field: "TotalCount",
+                    name: "TotalCount",
+                    color: '#5B9BD5'
+                }];
+                $("#showTables").show();
+                createChartTopPosts(selectedvalues, series, maxDate, minDate, like, share, comment);
+                createChartTopLeads(selectedvalues, series, maxDate, minDate, like, share, comment);
+                createChartRetrieveNewUserAction(selectedvalues, series, maxDate, minDate, like, share, comment);
+                createChartRetrivePostOldUser(selectedvalues, series, maxDate, minDate, like, share, comment);
+            });
+            $('.socialContent').show();
+        }
+    });
+</script>

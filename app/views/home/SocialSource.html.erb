@@ -1,0 +1,96 @@
+<h4 class="underlineText">Social Sources</h4>
+<p>
+    Please use the table below to manage the social sources you want Social2Lead to track for you. It is best if you
+    copy/paste the URL of the Facebook page you want to track.
+</p>
+<div id="SocialPages"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#menu a').removeClass('active');
+        $('.socialSource').addClass('active');
+        function checkUserSessionExpired() {
+            var authData = localStorage.getItem('authorizationData');
+            var webUrl = $('#WebUrl').val();
+            if (authData) {
+                var user = JSON.parse(localStorage.getItem('authorizationData'));
+                var expiryTimeSpan = new Date().getTime() / 1000;
+                if (expiryTimeSpan > user.timestamp) {
+                    localStorage.removeItem("authorizationData");
+                    var homeUrl = webUrl + "home/index?login";
+                    window.location = homeUrl;
+                }
+            } else {
+                localStorage.removeItem("authorizationData");
+                var homeUrl = webUrl + "home/index?login";
+                window.location = homeUrl;
+            }
+        }
+        checkUserSessionExpired();
+        var authDataModel = localStorage.getItem('authorizationData');
+        if (authDataModel) {
+            var serviceUrl = $('#ServiceUrl').val();
+            var authData = JSON.parse(authDataModel);
+            var headers = {};
+            headers.Authorization = 'Bearer ' + authData.data.bearer_token;
+            function bindSocialPages() {
+                checkUserSessionExpired();
+                var remoteDatasource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: serviceUrl + "api/FacebookAccount/RetrievePages",
+                            headers: headers,
+                            dataType: "json"
+                        },
+                        create: {
+                            url: serviceUrl + "api/FacebookAccount/CreatePage",
+                            headers: headers,
+                            dataType: "json"
+                        },
+                        update: {
+                            url: serviceUrl + "api/FacebookAccount/UpdatePage",
+                            headers: headers,
+                            dataType: "json"
+                        },
+                        destroy: {
+                            url: serviceUrl + "api/FacebookAccount/DeletePage",
+                            headers: headers,
+                            dataType: "json"
+                        },
+                        parameterMap: function (options, operation) {
+                            if (operation !== "read" && options) {
+                                return { models: kendo.stringify(options.models) };
+                            }
+                        }
+                    },
+                    batch: true,
+                    pageSize: 15,
+                    schema: {
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Link: { validation: { required: true } },
+                                Status: { editable: false }
+                            }
+                        }
+                    }
+                });
+                $("#SocialPages").kendoGrid({
+                    dataSource: remoteDatasource,
+                    pageable: {
+                        refresh: true
+                    },
+                    toolbar: ["create"],
+                    editable: "popup",
+                    columns: [
+                        { field: "Link", title: "Social Source", width: 300 },
+                        { field: "Status", title: "Status", width: 200 },
+                        { command: ["edit", "destroy"], title: "Manage", width: "180px" }
+                    ]
+                });
+            }
+
+            bindSocialPages();
+            $('.socialContent').show();
+        }
+    });
+</script>

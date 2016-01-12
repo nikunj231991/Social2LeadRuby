@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Social2LeadRuby</title>   
+    <script src="/assets/jquery-2.1.4.js"></script>
+    <script src="/assets/jquery-2.1.4.min.js"></script>     
+    <script src="/assets/jquery-ui.min.js"></script>
+    <script src="/assets/jquery-daterange-picker.js"></script>
+    <script src="/assets/moment.min.js"></script>
+    <script src="/assets/modernizr-2.6.2.js"></script>
+    <script src="/assets/bootstrap.js"></script>
+    <script src="/assets/bootstrap.min.js"></script>
+    <script src="/assets/Social2Lead.js"></script>
+    <script src="/assets/jszip.min.js"></script>
+    <script src="/assets/kendo.all.min.js"></script>
+    <script src="/assets/ProgressIndicatorScript.js"></script>
+    <script src="/assets/respond.js"></script>    
+    <link href="/assets/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/assets/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/demo.css" rel="stylesheet" type="text/css">
+    <link href="/assets/iThing.css" rel="stylesheet" type="text/css">
+    <link href="/assets/jquery-daterange-picker.css" rel="stylesheet" type="text/css">
+    <link href="/assets/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <link href="/assets/jquery-ui.css" rel="stylesheet" type="text/css">
+    <link href="/assets/kendo.common-material.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/kendo.material.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/Site.css" rel="stylesheet" type="text/css">
+    <link href="/assets/styles.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+ <div id="ProgressIndicator">
+        <div>&nbsp;</div>
+        <img alt="Loading.." src="/assets/loading.gif" />
+    </div>
+    <div>
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <img id="logo" src="/assets/logo.png" />
+            </div>
+            <div>
+                <ul id="ultag">
+                    <li class="navbar-right"><h4><a href="javascript:void(0);" id="LogOff"><br /><br />Sign Out</a></h4></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content"> 
+    <%= hidden_field_tag :ServiceUrl,Global.hosts.api %>
+    <%= hidden_field_tag :WebUrl, Global.hosts.web %>          
+        <div id="list-menu" class="clearfix col-md-2">
+            <div id="list-submenu">
+                <ul id="menu">
+                    <li><a class="accountSetup" href="AccountSetup">Account Setup</a></li>
+                    <li><a class="socialSource" href="SocialSource">Social Sources</a></li>
+                    <li><a class="socialLead" href="SocialLead" >Social Leads</a></li>
+                    <li><a class="analytics" href="Analytics">Analytics</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="job-info" class="col-md-10">
+            <div class="socialContent">
+                <%= yield %>
+            </div>
+        </div>
+        <hr />
+        <footer>
+            <p>&copy; <%= Time.now.year %> -<%= Time.now.year+1 %>   Mobius Logic, Inc.</p>
+        </footer>
+    </div>  
+    
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+# app/assets/javascripts/admin/global.js.erb
+<%= Global.generate_js(namespace: "AdminSettings", only: %w(admin hosts)) %>
+
+# app/assets/javascripts/admin.js.coffee
+#= require admin/global

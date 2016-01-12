@@ -1,0 +1,397 @@
+<div>
+    <h4 class="underlineText">Account Info</h4>
+    <p>
+        You are currently logged in to Facebook using this user : <label id="lblemail" class="skyblueFontColor boldText"></label>
+    </p>
+    <p>
+        The above user account is permitted to read data from the Facebook Graph API till this : <label id="lblExpireAccessToken" class="skyblueFontColor boldText"></label>
+    </p>
+    <p>After the above date, you will be required to login again in Social2Lead to continue the collection of data for the Social Sources that you have defined.</p>
+    <h4 id="trialPeriodMessage">You have <span id="daysLeft">0</span> days left for trial version.</h4>
+    <h4 id="fullPeriodMessage">You have <span id="daysLeftFull">0</span> days left for full version.</h4>
+    <h4 id="fullPeriodExpiredMessage">Your product period expired</h4>
+    <h4 id="trialPeriodExpiredMessage">Your trial period expired</h4>
+    <h4 id="payment"><a href="javascript:void(0);" class="textDecorationRemove">Click here to pay.</a></h4>
+</div>
+<br />
+
+<form id="paymentForm">
+    <div id="paymentGetaway">
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                    Please enter your credit card information below. the cost of using this service after the trial period is $10.00 per user per month.
+                    the credit card information you provide below will be charged $10.00 every month until you cancel the service.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Card Number</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtCardNumber" placeholder="Card Number" class="input-control numericTextBox" ondrop="return false;" onpaste="return false;" maxlength="16" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Card Type</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select id="drpCardType" class="input-control">
+                                <option value="VISA">VISA</option>
+                                <option value="American Express">American Express</option>
+                                <option value="Master Card">Master Card</option>
+                                <option value="Discover">Discover</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Expiry Date</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select id="drpMonth" class="input-control">
+                                <option>01</option>
+                                <option>02</option>
+                                <option>03</option>
+                                <option>04</option>
+                                <option>05</option>
+                                <option>06</option>
+                                <option>07</option>
+                                <option>08</option>
+                                <option>09</option>
+                                <option>10</option>
+                                <option>11</option>
+                                <option>12</option>
+                            </select>
+                            <select id="drpYear" class="input-control">
+                                <option value="2015">2015</option>
+                                <option value="2016">2016</option>
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Security Code</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtSecurityCode" placeholder="Security Code" class="input-control" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">First Name</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtFirstName" placeholder="First Name" class="input-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Last Name</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtLastName" placeholder="Last Name" class="input-control" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Phone</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtPhone" placeholder="Phone" class="input-control numericTextBox" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Company Name</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtCompanyName" placeholder="Company Name" class="input-control" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Address</label>
+                        </div>
+                        <div class="col-md-8">
+                            <textarea placeholder="Address" id="txtAddress" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">City</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtCity" placeholder="City" class="input-control" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Postal Code</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtPostalCode" placeholder="Postal Code" class="input-control" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">Country</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtCountry" placeholder="Country" class="input-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="input-label">State</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtState" placeholder="State" class="input-control" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="hrwidth" />
+        <div class="row">
+            <div class="col-md-12">
+                <input type="checkbox" id="chkSavePurchase" /> &nbsp;<label class="boldText">By clicking submit purchase, you agree to have the credit card above charged $10.00 every month for this service.</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="submit" value="Submit" id="btnSubmit" class="btnexportgrid submitpurchase"/>
+                <br/><br/><span class="cardSaveMessage">Your Card details successufully saved.</span>
+                <br /><br />If you wish to cancel your monthly subscription, please send an eamil to info@social2lead.com with CANCEL SUBSCRIPTION in the subject line.
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#menu a').removeClass('active');
+        $('.accountSetup').addClass('active');
+        function checkUserSessionExpired() {
+            var authData = localStorage.getItem('authorizationData');
+            var webUrl = $('#WebUrl').val();
+            if (authData) {
+                var user = JSON.parse(localStorage.getItem('authorizationData'));
+                var expiryTimeSpan = new Date().getTime() / 1000;
+                if (expiryTimeSpan > user.timestamp) {
+                    localStorage.removeItem("authorizationData");
+                    var homeUrl = webUrl + "home/index?login";
+                    window.location = homeUrl;
+                }
+            } else {
+                localStorage.removeItem("authorizationData");
+                var homeUrl = webUrl + "home/index?login";
+                window.location = homeUrl;
+            }
+        }
+        checkUserSessionExpired();
+        var authDataModel = localStorage.getItem('authorizationData');
+        if (authDataModel) {
+            var serviceUrl = $('#ServiceUrl').val();
+            var authData = JSON.parse(authDataModel);
+            var headers = {};
+            headers.Authorization = 'Bearer ' + authData.data.bearer_token;
+            $('#paymentGetaway').toggle('hide');
+            $('#payment').on('click', function (event) {
+                $('#paymentGetaway').toggle('show');
+                $('.cardSaveMessage').hide();
+            });
+            $('.cardSaveMessage').hide();
+            $('#btnSubmit').attr('disabled', true).addClass("disable");
+            $('#chkSavePurchase').change(function () {
+                if ($(this).prop('checked')) {
+                    $('#btnSubmit').attr('disabled', false).removeClass("disable");
+                }
+                else {
+                    $('#btnSubmit').attr('disabled', true).addClass("disable");
+                }
+            });
+            $("#paymentForm").submit(function () {
+                $('.cardSaveMessage').hide();
+                savePaymentDetail(); 
+                $('#btnSubmit').attr('disabled', true).addClass("disable");
+                return false;
+            });
+            function savePaymentDetail() {
+                checkUserSessionExpired();
+                var cardNumber = $("#txtCardNumber").val();
+                var cardType = $("#drpCardType").val();
+                var expireMonth = $("#drpMonth").val();
+                var expireYear = $("#drpYear").val();
+                var expireDate = expireMonth + "/" + expireYear;
+                var securityCode = $("#txtSecurityCode").val();
+                var firstName = $("#txtFirstName").val();
+                var lastName = $("#txtLastName").val();
+                var phone = $("#txtPhone").val();
+                var companyName = $("#txtCompanyName").val();
+                var address = $("#txtAddress").val();
+                var city = $("#txtCity").val();
+                var postalCode = $("#txtPostalCode").val();
+                var country = $("#txtCountry").val();
+                var state = $("#txtState").val();
+                var model = {
+                    CardNumber: cardNumber,
+                    CardType: cardType,
+                    ExpiryDate: expireDate,
+                    SecurityCode: securityCode,
+                    FirstName: firstName,
+                    LastName: lastName,
+                    Phone: phone,
+                    CompanyName: companyName,
+                    Address: address,
+                    City: city,
+                    PostalCode: postalCode,
+                    Country: country,
+                    State: state
+                };
+                var jsonmodel = JSON.stringify(model);
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    headers: headers,
+                    contentType: "application/json;charset=utf-8",
+                    data: jsonmodel,
+                    url: serviceUrl + "api/FacebookAccount/SaveUserPaymentDetail",
+                    success: function (result) {
+                        if (!result) {
+                            alert('Error In Payment Please contact administration.');
+                        }
+                        $('#chkSavePurchase').prop('checked', false);
+                        $('.cardSaveMessage').show();
+                    }
+                });
+            }
+
+            function getUserCreditCardDetail() {
+                checkUserSessionExpired();
+                $.ajax({
+                    type: 'Get',
+                    headers: headers,
+                    url: serviceUrl + "api/FacebookAccount/RetrieveUserCardDetail",
+                    success: function (result) {
+                        if (result) {
+                            $("#txtCardNumber").val(result.CardNumber);
+                            $("#drpCardType").val(result.CardType);
+                            var expiryDate = result.ExpiryDate;
+                            var expireMonth = expiryDate.substr(0, expiryDate.lastIndexOf("/"));
+                            var expireYear = expiryDate.substr(3);
+                            $("#drpMonth").val(expireMonth);
+                            $("#drpYear").val(expireYear);
+                            $("#txtSecurityCode").val(result.SecurityCode);
+                            $("#txtFirstName").val(result.FirstName);
+                            $("#txtLastName").val(result.LastName);
+                            $("#txtPhone").val(result.Phone);
+                            $("#txtCompanyName").val(result.CompanyName);
+                            $("#txtAddress").val(result.Address);
+                            $("#txtCity").val(result.City);
+                            $("#txtPostalCode").val(result.PostalCode);
+                            $("#txtCountry").val(result.Country);
+                            $("#txtState").val(result.State);
+                        }
+                    }
+                });
+            }
+
+            function retrieveUserDetails() {
+                checkUserSessionExpired();
+                App.ProgressIndicator.Show();
+                $.ajax({
+                    type: "Get",
+                    url: serviceUrl + "api/FacebookAccount/RetrieveUserDetails",
+                    headers: headers,
+                    success: function (dataString) {
+                        App.ProgressIndicator.Hide();
+                        $('#accountSetup').addClass("displayed");
+                        $("#lblExpireAccessToken").text(dataString.ExpiryDate);
+                        $("#lblemail").text(authData.data.email);
+                        if (dataString.DaysToRemainExpireProduct > 0) {
+                            $("#trialPeriodMessage").show();
+                            $("#fullPeriodMessage").hide();
+                            $("#daysLeft").html(dataString.DaysToRemainExpireProduct);
+                            $("#trialPeriodExpiredMessage").hide();
+                            $("#fullPeriodExpiredMessage").hide();
+                            $('#accountSetup').addClass("displayed");
+                        }
+                        else {
+                            $("#trialPeriodMessage").hide();
+                            $("#fullPeriodExpiredMessage").hide();
+                            $("#trialPeriodExpiredMessage").show();
+                            $('#accountSetup').addClass("displayed");
+                        }
+                        if (dataString.DaysToRemainExpireProduct <= 0 && dataString.LicenceType == '2') {
+                            $("#trialPeriodExpiredMessage").hide();
+                            $("#trialPeriodMessage").hide();
+                            $("#fullPeriodExpiredMessage").show();
+                            $('#accountSetup').addClass("displayed");
+                        }
+                        if (dataString.DaysToRemainExpireProduct > 0 && dataString.LicenceType == '2') {
+                            $("#trialPeriodMessage").hide();
+                            $("#fullPeriodMessage").show();
+                            $("#daysLeftFull").html(dataString.DaysToRemainExpireProduct);
+                        }
+                        getUserCreditCardDetail();
+                    }
+                });
+            }
+            retrieveUserDetails();
+            $('.socialContent').show();
+        }
+    });
+</script>

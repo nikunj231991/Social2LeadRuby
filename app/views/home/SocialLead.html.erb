@@ -1,0 +1,105 @@
+<h4 class="underlineText">Social Leads</h4>
+<p>To export a CSV file of a subset of your data, please select the date range and click Download CSV. This might take a while depending on the date range you specify.</p>
+<p>
+    <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+        <input id="txtSocialLeadDateRangePicker" class="form-control" readonly>
+    </div>
+    <div id="socialLeadDateRangePickerContainer"></div>
+</p>
+<p>
+    <button class="btnexportgrid" id="btnDownloadCSV">Download CSV</button>
+</p>
+<p>
+    You can get access to all your data via Power BI.
+    Make sure you have the Power BI Desktop Client installed on your computer before you click the Download Power BI Data button below.
+    You can get the Power BI Desktop client from this link: <a href="https://powerbi.microsoft.com/en-us/downloads" target="_blank">https://powerbi.microsoft.com/en-us/downloads</a>
+</p>
+<p>
+    <a href="~/PowerBIFiles/Social2LeadPowerBIOdataUserFile.pbix" download class="btnexportgrid textDecorationRemove">Download Power BI Data</a>
+</p>
+<p>
+    When you refresh the data in Power BI, you will get all the data in the database from the start of your data collection period.
+    You will need a username and password to get that data. Here they are:
+</p>
+<p>
+    <span class="boldText">Username : <label id="lblPowerBIUserId"></label></span><br />
+    <span class="boldText">Password : <label id="lblPowerBIPassword"></label></span><br />
+</p>
+<p>
+    <img src="/assets/powerBIOdataCredential1.png" height="290px" alt="powerbiodata" />
+</p>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#menu a').removeClass('active');
+        $('.socialLead').addClass('active');
+        function checkUserSessionExpired() {
+            var authData = localStorage.getItem('authorizationData');
+            var webUrl = $('#WebUrl').val();
+            if (authData) {
+                var user = JSON.parse(localStorage.getItem('authorizationData'));
+                var expiryTimeSpan = new Date().getTime() / 1000;
+                if (expiryTimeSpan > user.timestamp) {
+                    localStorage.removeItem("authorizationData");
+                    var homeUrl = webUrl + "home/index?login";
+                    window.location = homeUrl;
+                }
+            } else {
+                localStorage.removeItem("authorizationData");
+                var homeUrl = webUrl + "home/index?login";
+                window.location = homeUrl;
+            }
+        }
+        checkUserSessionExpired();
+        var authDataModel = localStorage.getItem('authorizationData');
+        if (authDataModel) {
+            var serviceUrl = $('#ServiceUrl').val();
+            var authData = JSON.parse(authDataModel);
+            var headers = {};
+            headers.Authorization = 'Bearer ' + authData.data.bearer_token;
+            var password = authData.data.powerbipassword;
+            if (password.lastIndexOf('#') > 0) {
+                password = password.substr(0, password.lastIndexOf("#"));
+            }
+            $("#lblPowerBIUserId").text(authData.data.email);
+            $("#lblPowerBIPassword").text(password);
+            $('#txtSocialLeadDateRangePicker').dateRangePicker({
+                container: '#socialLeadDateRangePickerContainer',
+                defaultDateRange: 'LAST_30_DAYS',
+                minDate: 'today()-90D',
+                maxDate: '-90D'
+            });
+            $("#btnDownloadCSV").click(function () {
+                checkUserSessionExpired();
+                App.ProgressIndicator.Show();
+                var datesRange = $("#txtSocialLeadDateRangePicker").val();
+                var startDateRange = datesRange.substr(0, datesRange.lastIndexOf("-"));
+                var endDateRange = datesRange.substr(13, datesRange.lastIndexOf(" "));
+                var minDateRange = new Date(startDateRange);
+                var maxDateRange = new Date(endDateRange);
+                var endMonthDateRange = maxDateRange.getMonth() + 1;
+                var startMonthDateRange = minDateRange.getMonth() + 1;
+                maxDateRange = maxDateRange.getFullYear() + "/" + endMonthDateRange + "/" + maxDateRange.getDate();
+                minDateRange = minDateRange.getFullYear() + "/" + startMonthDateRange + "/" + minDateRange.getDate();
+                $.ajax({
+                    type: "Get",
+                    headers: headers,
+                    url: serviceUrl + "api/FacebookAccount/ExportCsvFile?maxDate=" + maxDateRange + "&minDate=" + minDateRange,
+                    success: function (result) {
+                        App.ProgressIndicator.Hide();
+                        if (result) {
+                            var csvReport = serviceUrl + "ReportFiles/";
+                            window.open(csvReport + authData.data.userid + ".csv", "_blank");
+                        }
+                        else {
+                            alert("Unable to Download CSV File.");
+                        }
+                    }
+                });
+            });
+            $('.socialContent').show();
+        }
+    });
+</script>
