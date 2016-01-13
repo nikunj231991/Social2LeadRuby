@@ -150,6 +150,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    sqlite3 (1.3.11-x64-mingw32)
     sshkit (1.8.1)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
@@ -182,6 +183,7 @@ DEPENDENCIES
   capistrano-rvm
   capistrano3-puma
   coffee-rails (~> 4.1.0)
+  coffee-script-source
   global
   jbuilder (~> 2.0)
   jquery-rails
@@ -192,6 +194,7 @@ DEPENDENCIES
   rails_12factor
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  sqlite3
   turbolinks
   tzinfo-data
   uglifier (>= 1.3.0)

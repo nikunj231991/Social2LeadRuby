@@ -23,7 +23,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem 'coffee-script-source'
 # Use Unicorn as the app server
 # gem 'unicorn'
 gem 'puma'
@@ -38,7 +38,7 @@ group :development, :test do
   gem 'capistrano-bundler', require: false
   gem 'capistrano-rvm'
   gem 'web-console', '~> 2.0'
-  
+  gem 'sqlite3'
 end
 group :production do
   gem 'pg'
@@ -46,4 +46,3 @@ group :production do
 end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
